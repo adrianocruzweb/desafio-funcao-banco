@@ -1,3 +1,5 @@
+from datetime import datetime
+
 menu = """
 
 [d] Depositar
@@ -12,6 +14,37 @@ limite = 500
 extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
+lista_cliente = []
+lista_contas = []
+numero_conta = 1
+
+
+def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
+    if(valor < saldo and valor < limite and numero_saques < limite_saques):
+        saldo -= valor
+        limite -= valor
+        numero_saques -= 1
+        extrato = f"Saque realizado com sucesso: {valor}, Saldo: {saldo} --- {datetime.now()} /n"
+    else:
+        extrato = f"Tentativa de Saque: {valor}, Saldo: {saldo} --- {datetime.now()} /n"
+
+    return saldo, extrato
+
+def deposito(saldo, valor, extrato, /):
+
+    return saldo, extrato
+
+def extrato(saldo, /, *, extrato):
+
+    return extrato
+
+def criar_usuario(lista_cliente):
+
+    return lista_cliente
+
+def criar_contas(lista_contas):
+
+    return lista_contas
 
 
 
