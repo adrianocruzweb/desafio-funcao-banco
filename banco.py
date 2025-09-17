@@ -14,8 +14,8 @@ limite = 500
 extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
-lista_cliente = []
-lista_contas = []
+lista_cliente = {}
+lista_contas = {}
 numero_conta = 1
 
 
@@ -50,7 +50,34 @@ def imprime_extrato(saldo, /, *, extrato):
 
 def criar_usuario(lista_cliente):
 
-    return lista_cliente
+    logradouro = input("informe o logradouro: ")
+    numero = input("informe o numero: ")
+    bairro = input("informe o bairro: ")
+    cidade = input("informe o cidade: ")
+    estado = input("informe a sigla do estado: ")
+
+    nome = input("Informe o nome do usuário: ")
+    aux_cpf = input("Informe o cpf do usuário(sem \".\" e \"-\"): ")
+    cpf = aux_cpf.replace(".", "").replace("-", "").strip()
+
+    data_str = input("Informe a data de nascimento (formato dd/mm/aaaa): ")
+    data_nascimento = datetime.strptime(data_str, "%d/%m/%Y").date()
+    endereco = f"{logradouro},{numero} - {bairro} - {cidade}/{estado}"
+
+    for cliente in lista_cliente:
+        if cliente["cpf"] == cpf:
+            print("ERRO: CPF já cadastrado.")
+            return
+
+    novo_cliente = {
+        "nome": nome,
+        "cpf": cpf,
+        "data_nascimento": data_nascimento,
+        "endereco": endereco
+    }
+
+    lista_cliente.append(novo_cliente)
+    print("✅ Usuário cadastrado com sucesso.")
 
 def criar_contas(lista_contas):
 
