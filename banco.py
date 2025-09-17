@@ -5,6 +5,8 @@ menu = """
 [d] Depositar
 [s] Sacar
 [e] Extrato
+[c] Criar Conta
+[u] Criar Usuário
 [q] Sair
 
 => """
@@ -14,8 +16,8 @@ limite = 500
 extrato = ""
 numero_saques = 0
 LIMITE_SAQUES = 3
-lista_cliente = {}
-lista_contas = {}
+lista_cliente = []
+lista_contas = []
 numero_conta = 1
 
 
@@ -83,6 +85,11 @@ def criar_usuario(lista_cliente):
     data_str = input("Informe a data de nascimento (formato dd/mm/aaaa): ")
     data_nascimento = datetime.strptime(data_str, "%d/%m/%Y").date()
     endereco = f"{logradouro},{numero} - {bairro} - {cidade}/{estado}"
+    print(endereco)
+    resposta = input("O endereço está correto? (sim/não): ").strip().lower()
+
+    if resposta != "sim":
+        return False
 
     for cliente in lista_cliente:
         if cliente["cpf"] == cpf:
@@ -93,13 +100,15 @@ def criar_usuario(lista_cliente):
         "nome": nome,
         "cpf": cpf,
         "data_nascimento": data_nascimento,
-        "endereco": endereco
+        "endereco": endereco,
+        "conta":[]
     }
 
     lista_cliente.append(novo_cliente)
+    print(lista_cliente)
     print("Usuário cadastrado com sucesso.")
 
-def criar_contas():
+def criar_contas(lista_cliente):
     global numero_conta
     numero_conta += 1
 
@@ -109,7 +118,7 @@ def criar_contas():
     }
 
     for cliente in lista_cliente:
-        if cliente["conta"]["conta"] == nova_conta["conta"]:
+        if cliente["conta"] == nova_conta["conta"]:
             print("ERRO: A conta já está cadastrada para um cliente.")
             return False
 
@@ -120,6 +129,7 @@ def criar_contas():
             print("Cliente encontrado:")
             cliente["conta"].append(nova_conta)
             print("Conta cadastrada com sucesso")
+            print(cliente)
             return True
 
     print("Cliente não encontrado.")
@@ -147,6 +157,12 @@ while True:
 
     elif opcao == "e":
         imprime_extrato(saldo, extrato=extrato)
+
+    elif opcao == "u":
+        criar_usuario(lista_cliente)
+
+    elif opcao == "c":
+        criar_contas(lista_cliente)
 
     elif opcao == "q":
         break
