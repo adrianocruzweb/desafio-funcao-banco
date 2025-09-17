@@ -24,19 +24,29 @@ def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
         saldo -= valor
         limite -= valor
         numero_saques -= 1
-        extrato = f"Saque realizado com sucesso: {valor}, Saldo: {saldo} --- {datetime.now()} /n"
+        valor_saque = valor
+        valor = 0
+        extrato += f"Saque realizado com sucesso: {valor_saque}, Saldo: {saldo} --- {datetime.now()} /n"
     else:
-        extrato = f"Tentativa de Saque: {valor}, Saldo: {saldo} --- {datetime.now()} /n"
+        extrato += f"Tentativa de Saque: {valor_saque}, Saldo: {saldo} --- {datetime.now()} /n"
 
     return saldo, extrato
 
 def deposito(saldo, valor, extrato, /):
 
+    saldo += valor
+    valor_deposito = valor
+    valor = 0
+
+    extrato += f"Doposito realizado com sucesso: {valor_deposito}, Saldo: {saldo} --- Saldo Anterior: {saldo-valor} {datetime.now()} /n"
+
     return saldo, extrato
 
-def extrato(saldo, /, *, extrato):
+def imprime_extrato(saldo, /, *, extrato):
 
-    return extrato
+    print(extrato)
+
+    return extrato, saldo
 
 def criar_usuario(lista_cliente):
 
