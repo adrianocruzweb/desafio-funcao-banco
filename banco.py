@@ -21,26 +21,25 @@ numero_conta = 1
 
 def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
     if(valor < saldo and valor < limite and numero_saques < limite_saques):
+        saldo_anterior = saldo
         saldo -= valor
         limite -= valor
         numero_saques -= 1
         valor_saque = valor
         valor = 0
-        extrato += f"Saque realizado com sucesso: {valor_saque}, Saldo: {saldo} --- {datetime.now()} /n"
+        extrato += f"Saque realizado com sucesso: | Saque: {valor_saque} |( Saldo Atual: {saldo} | Saldo Anterior: {saldo_anterior} )--- {datetime.now()} /n"
     else:
-        extrato += f"Tentativa de Saque: {valor_saque}, Saldo: {saldo} --- {datetime.now()} /n"
+        extrato += f"Tentativa de Saque: {valor_saque} | Saldo Atual: {saldo} --- {datetime.now()} /n"
 
     return saldo, extrato
 
 def deposito(saldo, valor, extrato, /):
 
+    saldo_anterior = saldo
     saldo += valor
-    valor_deposito = valor
-    valor = 0
-
-    extrato += f"Doposito realizado com sucesso: {valor_deposito}, Saldo: {saldo} --- Saldo Anterior: {saldo-valor} {datetime.now()} /n"
-
+    extrato += f"Depósito: R$ {valor:.2f} | Saldo: R$ {saldo:.2f} | Saldo Anterior: R$ {saldo_anterior:.2f} | {datetime.now()}\n"
     return saldo, extrato
+
 
 def imprime_extrato(saldo, /, *, extrato):
 
@@ -114,12 +113,9 @@ while True:
     if opcao == "d":
         valor = float(input("Informe o valor do depósito: "))
 
-        if valor > 0:
-            saldo += valor
-            extrato += f"Depósito: R$ {valor:.2f}\n"
+        saldo,extrato=deposito(saldo, valor, extrato)
 
-        else:
-            print("Operação falhou! O valor informado é inválido.")
+        print(extrato)
 
     elif opcao == "s":
         valor = float(input("Informe o valor do saque: "))
