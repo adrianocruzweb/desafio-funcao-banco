@@ -67,7 +67,7 @@ def criar_usuario(lista_cliente):
     for cliente in lista_cliente:
         if cliente["cpf"] == cpf:
             print("ERRO: CPF já cadastrado.")
-            return
+            return False
 
     novo_cliente = {
         "nome": nome,
@@ -77,12 +77,33 @@ def criar_usuario(lista_cliente):
     }
 
     lista_cliente.append(novo_cliente)
-    print("✅ Usuário cadastrado com sucesso.")
+    print("Usuário cadastrado com sucesso.")
 
-def criar_contas(lista_contas):
+def criar_contas():
+    global numero_conta
+    numero_conta += 1
 
-    return lista_contas
+    nova_conta = {
+        "agencia": "0001",
+        "conta": numero_conta
+    }
 
+    for cliente in lista_cliente:
+        if cliente["conta"]["conta"] == nova_conta["conta"]:
+            print("ERRO: A conta já está cadastrada para um cliente.")
+            return False
+
+    nome = input("informe o nome do cliente:")
+
+    for cliente in lista_cliente:
+        if cliente["nome"].lower() == nome.lower():
+            print("Cliente encontrado:")
+            cliente["conta"].append(nova_conta)
+            print("Conta cadastrada com sucesso")
+            return True
+
+    print("Cliente não encontrado.")
+    return False
 
 
 
