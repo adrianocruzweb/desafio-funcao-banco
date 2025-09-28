@@ -29,6 +29,53 @@ class Deposito(Transacao):
     def registrar(self):
         return f"Depósito: R$ {self.valor:.2f} | {datetime.now()}"
 
+class cliente:
+
+    def __init__(self, nome, cpf, data_nascimento, endereco):
+        self.nome = nome
+        self.cpf = cpf
+        self.data_nascimento = data_nascimento
+        self.endereco = endereco
+
+    def realizar_transacao(self, conta, transacao):
+        conta.saldo += transacao.valor
+        conta.historico.adicionar_transacao(transacao.registrar())
+
+
+    def adicionar_conta(self, Conta):
+        self.conta = Conta
+
+class Conta:
+
+    def __init__(self, numero, agencia, Cliente):
+        self.numero = numero
+        self.agencia = agencia
+        self.cliente = Cliente
+        self.saldo = 0
+        self.historico = Historico()
+
+    def saldo_atual(self):
+        return self.saldo
+
+    def nova_conta(self, Cliente, numero):
+        self.cliente = Cliente
+        self.numero = numero
+        self.saldo = 0
+        self.historico = Historico()
+
+    def sacar(self, valor):
+        if valor > self.saldo:
+            print("Saldo insuficiente.")
+            return False
+        self.saldo -= valor
+        self.historico.adicionar_transacao(f"Saque: R$ {valor:.2f} | {datetime.now()}")
+        return True
+
+    def depositar(self, valor):
+        self.saldo += valor
+        self.historico.adicionar_transacao(f"Depósito: R$ {valor:.2f} | {datetime.now()}")
+        return True
+
 
 
 
