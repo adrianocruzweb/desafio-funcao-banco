@@ -19,13 +19,17 @@ class Transacao:
     def registrar(self, conta):
         raise NotImplementedError("Este método deve ser implementado pela subclasse.")
 
-class Saldo(Transacao):
-
+class Saque(Transacao):
     def __init__(self, valor):
+        if valor <= 0:
+            raise ValueError("O valor do saque deve ser positivo.")
         self.valor = valor
 
-    def registrar(self):
-        return f"Saldo inicial: R$ {self.valor:.2f} | {datetime.now()}"
+    def registrar(self, conta):
+        if conta.sacar(self.valor):
+            conta.historico.adicionar_transacao(self)
+            return True
+        return False
 
 class Deposito(Transacao):
     def __init__(self, valor):
