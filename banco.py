@@ -67,38 +67,91 @@ class PessoaFisica(Cliente):
 
 class Conta:
 
-    def __init__(self, numero, agencia, Cliente):
-        self.numero = numero
-        self.agencia = agencia
-        self.cliente = Cliente
-        self.saldo = 0
-        self.historico = Historico()
+    def __init__(self, numero, cliente):
+        self._saldo = 0.0
+        self._numero = numero
+        self._agencia = "0001"
+        self._cliente = cliente
+        self._historico = Historico()
 
-    def saldo_atual(self):
-        return self.saldo
+    @property
+    def saldo(self):
+        return self._saldo
 
-    def nova_conta(self, Cliente, numero):
-        self.cliente = Cliente
-        self.numero = numero
-        self.saldo = 0
-        self.historico = Historico()
+    @property
+    def numero(self):
+        return self._numero
 
+    @property
+    def agencia(self):
+        return self._agencia
+
+    @property
+    def cliente(self):
+        return self._cliente
+
+    @property
+    def historico(self):
+        return self._historico
+
+    @classmethod
+    def nova_conta(cls, cliente, numero):
+        return cls(numero, cliente)
+
+    @abstractmethod
     def sacar(self, valor):
-        if valor > self.saldo:
-            print("Saldo insuficiente.")
-            return False
-        self.saldo -= valor
-        self.historico.adicionar_transacao(f"Saque: R$ {valor:.2f} | {datetime.now()}")
-        return True
+        pass
 
     def depositar(self, valor):
-        self.saldo += valor
-        self.historico.adicionar_transacao(f"Depósito: R$ {valor:.2f} | {datetime.now()}")
+        if valor > 0:
+            self._saldo += valor
+            print("Depósito realizado com sucesso!")
+            return True
+        else:
+            print("Erro! O valor informado é inválido.")
+            return False
+
+    def exibir_extrato(self):
+        print("\n================ EXTRATO ================")
+        print(f"Cliente: {self.cliente.nome}")
+        print(f"Agência: {self.agencia}\tConta: {self.numero}")
+        print("-----------------------------------------")
+        if not self.historico.transacoes:
+            print("Não foram realizadas movimentações.")
+        else:
+            for transacao in self.historico.transacoes:
+                print(f"{transacao['data']} - {transacao['tipo']}: R$ {transacao['valor']:.2f}")
+        print("-----------------------------------------")
+        print(f"Saldo atual: R$ {self.saldo:.2f}")
+        print("=========================================")
+
+class ContaCorrente(Conta):
+
+    def __init__(self, numero, cliente, limite=500.0, limite_saques=3):
+        super().__init__(numero, cliente)
+        self.limite = limite
+        self.limite_saques = limite_saques
+        self.numero_saques = 0
+
+    def sacar(self, valor):
+        saldo_total_disponivel = self.saldo + self.limite
+
+        if self.numero_saques >= self.limite_saques:
+            print("Erro! Número máximo de saques excedido.")
+            return False
+
+        if valor > saldo_total_disponivel:
+            print("Erro! Valor do saque excede o saldo e o limite.")
+            return False
+
+        if valor <= 0:
+            print("Erro! O valor informado é inválido.")
+            return False
+
+        self._saldo -= valor
+        self.numero_saques += 1
+        print(f"Saque de R${valor:.2f} realizado! Saques hoje: {self.numero_saques}")
         return True
-
-
-
-
 
 
 menu = """
