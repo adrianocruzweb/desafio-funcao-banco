@@ -1,17 +1,23 @@
 from datetime import datetime
 
 class Historico:
-
     def __init__(self):
-        self.transacoes = []
+        self._transacoes = []
+
+    @property
+    def transacoes(self):
+        return self._transacoes[:]
 
     def adicionar_transacao(self, transacao):
-        self.transacoes.append(transacao)
+        self._transacoes.append({
+            "data": datetime.now().strftime("%d-%m-%Y %H:%M:%S"),
+            "tipo": transacao.__class__.__name__,
+            "valor": transacao.valor
+        })
 
 class Transacao:
-
-    def registrar(self):
-        pass
+    def registrar(self, conta):
+        raise NotImplementedError("Este método deve ser implementado pela subclasse.")
 
 class Saldo(Transacao):
 
@@ -22,12 +28,14 @@ class Saldo(Transacao):
         return f"Saldo inicial: R$ {self.valor:.2f} | {datetime.now()}"
 
 class Deposito(Transacao):
-
     def __init__(self, valor):
+        if valor <= 0:
+            raise ValueError("O valor do depósito deve ser positivo.")
         self.valor = valor
 
-    def registrar(self):
-        return f"Depósito: R$ {self.valor:.2f} | {datetime.now()}"
+    def registrar(self, conta):
+        conta.depositar(self.valor)
+        conta.historico.adicionar_transacao(self)
 
 class cliente:
 
