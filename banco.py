@@ -1,5 +1,20 @@
 from datetime import datetime
 
+class Historico:
+
+    def __init__(self):
+        self.transacoes = []
+
+    def adicionar_transacao(self, transacao):
+        self.transacoes.append(transacao)
+
+class Transacao:
+
+    def registrar(self):
+        pass
+
+
+
 menu = """
 
 [d] Depositar
@@ -63,12 +78,12 @@ def deposito(saldo, valor, extrato, /):
     extrato += f"\n Depósito: R$ {valor:.2f} | Saldo: R$ {saldo:.2f} | Saldo Anterior: R$ {saldo_anterior:.2f} | {datetime.now()}"
     return saldo, extrato
 
-
+'''
 def imprime_extrato(saldo, /, *, extrato):
 
     print(extrato)
 
-    return extrato, saldo
+    return extrato, saldo'''
 
 def criar_usuario(lista_cliente):
 
