@@ -1,4 +1,5 @@
 from datetime import datetime
+from abc import ABC, abstractmethod
 
 class Historico:
     def __init__(self):
@@ -15,14 +16,13 @@ class Historico:
             "valor": transacao.valor
         })
 
-class Transacao:
+class Transacao(ABC):
+    @abstractmethod
     def registrar(self, conta):
-        raise NotImplementedError("Este método deve ser implementado pela subclasse.")
+        pass
 
 class Saque(Transacao):
     def __init__(self, valor):
-        if valor <= 0:
-            raise ValueError("O valor do saque deve ser positivo.")
         self.valor = valor
 
     def registrar(self, conta):
@@ -33,29 +33,26 @@ class Saque(Transacao):
 
 class Deposito(Transacao):
     def __init__(self, valor):
-        if valor <= 0:
-            raise ValueError("O valor do depósito deve ser positivo.")
         self.valor = valor
 
     def registrar(self, conta):
         conta.depositar(self.valor)
         conta.historico.adicionar_transacao(self)
 
-class cliente:
+class Cliente:
 
-    def __init__(self, nome, cpf, data_nascimento, endereco):
-        self.nome = nome
-        self.cpf = cpf
-        self.data_nascimento = data_nascimento
+    def __init__(self, endereco):
         self.endereco = endereco
+        self.contas = [] # Um cliente tem uma LISTA de contas, apanhei um pouco para entender esse conceito da lista no python
 
     def realizar_transacao(self, conta, transacao):
-        conta.saldo += transacao.valor
-        conta.historico.adicionar_transacao(transacao.registrar())
+        if conta in self.contas:
+            transacao.registrar(conta)
+        else:
+            print("Erro: A conta informada não pertence a este cliente.")
 
-
-    def adicionar_conta(self, Conta):
-        self.conta = Conta
+    def adicionar_conta(self, conta):
+        self.contas.append(conta)
 
 class Conta:
 
