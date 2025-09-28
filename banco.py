@@ -54,6 +54,17 @@ class Cliente:
     def adicionar_conta(self, conta):
         self.contas.append(conta)
 
+class PessoaFisica(Cliente):
+
+    def __init__(self, cpf, nome, data_nascimento, endereco):
+        super().__init__(endereco)
+        self.cpf = cpf
+        self.nome = nome
+        self.data_nascimento = data_nascimento
+
+    def __str__(self):
+        return f"Cliente: {self.nome}, CPF: {self.cpf}"
+
 class Conta:
 
     def __init__(self, numero, agencia, Cliente):
