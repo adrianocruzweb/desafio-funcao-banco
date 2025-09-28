@@ -13,6 +13,25 @@ class Transacao:
     def registrar(self):
         pass
 
+class Saldo(Transacao):
+
+    def __init__(self, valor):
+        self.valor = valor
+
+    def registrar(self):
+        return f"Saldo inicial: R$ {self.valor:.2f} | {datetime.now()}"
+
+class Deposito(Transacao):
+
+    def __init__(self, valor):
+        self.valor = valor
+
+    def registrar(self):
+        return f"Depósito: R$ {self.valor:.2f} | {datetime.now()}"
+
+
+
+
 
 
 menu = """
