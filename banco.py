@@ -165,6 +165,7 @@ menu = """
 
 => """
 
+'''
 saldo = 0
 limite = 500
 extrato = ""
@@ -173,8 +174,9 @@ LIMITE_SAQUES = 3
 lista_cliente = []
 lista_contas = []
 numero_conta = 1
+'''
 
-
+'''
 def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
 
     saldo_anterior = saldo
@@ -209,13 +211,16 @@ def saque(*, saldo, valor, extrato, limite, numero_saques, limite_saques):
         extrato += f"\n Tentativa de Saque: {valor_saque} | Saldo Atual: {saldo} --- {datetime.now()}"
 
     return saldo, extrato
+'''
 
+'''
 def deposito(saldo, valor, extrato, /):
 
     saldo_anterior = saldo
     saldo += valor
     extrato += f"\n Depósito: R$ {valor:.2f} | Saldo: R$ {saldo:.2f} | Saldo Anterior: R$ {saldo_anterior:.2f} | {datetime.now()}"
     return saldo, extrato
+'''
 
 '''
 def imprime_extrato(saldo, /, *, extrato):
@@ -224,6 +229,7 @@ def imprime_extrato(saldo, /, *, extrato):
 
     return extrato, saldo'''
 
+'''
 def criar_usuario(lista_cliente):
 
     logradouro = input("informe o logradouro: ")
@@ -261,7 +267,9 @@ def criar_usuario(lista_cliente):
     lista_cliente.append(novo_cliente)
     print(lista_cliente)
     print("Usuário cadastrado com sucesso.")
+'''
 
+'''
 def criar_contas(lista_cliente):
     global numero_conta
     numero_conta += 1
@@ -288,9 +296,10 @@ def criar_contas(lista_cliente):
 
     print("Cliente não encontrado.")
     return False
+'''
 
 
-
+'''
 while True:
 
     opcao = input(menu)
@@ -323,3 +332,91 @@ while True:
 
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
+'''
+
+clientes = []
+contas = []
+
+while True:
+    opcao = menu()
+
+    if opcao == "d":
+        cpf = input("Informe o CPF: ")
+        clientes_encontrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+        cliente = clientes_encontrados[0] if clientes_encontrados else None
+        if cliente and clientes_encontrados[0].contas:
+            valor = float(input("Informe o valor do depósito: "))
+            deposito = Deposito(valor)
+            cliente.realizar_transacao(cliente.contas[0], deposito)
+        else:
+            print("\nErro! Cliente não encontrado!")
+
+    elif opcao == "s":
+        cpf = input("Informe o CPF: ")
+        clientes_encontrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+        cliente = clientes_encontrados[0] if clientes_encontrados else None
+        if cliente and clientes_encontrados[0].contas:
+            valor = float(input("Informe o valor do saque: "))
+            saque = Saque(valor)
+            cliente.realizar_transacao(cliente.contas[0], saque)
+        else:
+            print("\nErro! Cliente não encontrado ou não possui conta.")
+
+    elif opcao == "e":
+        cpf = input("Informe o CPF: ")
+        clientes_encontrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+        cliente = clientes_encontrados[0] if clientes_encontrados else None
+        if cliente and clientes_encontrados[0].contas:
+            cliente.contas[0].exibir_extrato()
+        else:
+            print("\nErro! Cliente não encontrado ou não possui conta.")
+
+    elif opcao == "nu":
+        cpf = input("Informe o CPF (somente números): ")
+        clientes_encontrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+        cliente = clientes_encontrados[0] if clientes_encontrados else None
+        if cliente:
+            print("\nErro! Já existe um cliente com este CPF!")
+        else:
+            nome = input("Informe o nome completo: ")
+            data_nascimento = input("Informe a data de nascimento (DD-MM-AAAA): ")
+            endereco = input("Informe o endereço (logradouro, nro - bairro - cidade/sigla estado): ")
+
+            novo_cliente = PessoaFisica(nome=nome, data_nascimento=data_nascimento, cpf=cpf, endereco=endereco)
+            clientes.append(novo_cliente)
+            print("\n Cliente criado com sucesso! ")
+
+    elif opcao == "nc":
+        cpf = input("Informe o CPF: ")
+        clientes_encontrados = [cliente for cliente in clientes if cliente.cpf == cpf]
+        cliente = clientes_encontrados[0] if clientes_encontrados else None
+        if cliente:
+            print("\nErro! Cliente não encontrado! ")
+        else:
+            numero_conta = len(contas) + 1
+            nova_conta = ContaCorrente(numero=numero_conta, cliente=cliente)
+
+            contas.append(nova_conta)
+            cliente.adicionar_conta(nova_conta)
+
+            print(f"\n Conta Corrente {numero_conta} Cliente {cliente.nome}! ===")
+
+    elif opcao == "lc":
+        if not contas:
+            print("\nErro! Nenhuma conta cadastrada. ")
+        else:
+            print("\n================ LISTA DE CONTAS ================")
+            for conta in contas:
+                print(f"""
+                Agência:\t{conta.agencia}
+                Conta:\t\t{conta.numero}
+                Titular:\t{conta.cliente.nome}
+                """)
+            print("==============================================")
+
+    elif opcao == "q":
+        print("\nSaindo!")
+        break
+
+    else:
+        print("\n Operação inválida!")
