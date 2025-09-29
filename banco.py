@@ -164,7 +164,7 @@ menu = """
 [q] Sair
 
 => """
-
+####Very old code below, ignore it####
 '''
 saldo = 0
 limite = 500
@@ -333,7 +333,7 @@ while True:
     else:
         print("Operação inválida, por favor selecione novamente a operação desejada.")
 '''
-
+####Very old code below, ignore it####
 clientes = []
 contas = []
 
