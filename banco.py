@@ -338,7 +338,7 @@ clientes = []
 contas = []
 
 while True:
-    opcao = menu()
+    opcao = input(menu)
 
     if opcao == "d":
         cpf = input("Informe o CPF: ")
